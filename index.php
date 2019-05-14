@@ -1,3 +1,24 @@
+<?php
+
+require('database.php');
+
+if (isset($_POST['submit'])) {
+	if ($_POST['user'] > "" && $_POST['message'] > "") {
+		$username = mysqli_real_escape_string($link, $_POST['user']);
+		$message = mysqli_real_escape_string($link, $_POST['message']);
+
+		$query = "INSERT INTO chat (username, message)
+				  VALUES ('$username', '$message')";
+
+		mysqli_query($link, $query);
+	}
+}
+
+$query = "SELECT * FROM chat";
+$result = mysqli_query($link, $query);
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -17,11 +38,21 @@
 
 		<div id="chat">
 			<ul>
-				<li class="message">
-					<span>13/05/19 22:12 - </span>
-					Username:
-					Message
-				</li>
+				<?php
+
+				while ($row = mysqli_fetch_assoc($result)) {
+					$date = date_create($row['datetime']);
+
+					echo "
+					<li class=\"message\">
+						<span>" . date_format($date, "d/m/y h:i A") . " - </span>
+						" . $row['username'] . ":
+						" . $row['message'] . "
+					</li>
+					";
+				}
+
+				?>
 			</ul>
 		</div> <!-- /#messages -->
 
