@@ -11,11 +11,10 @@ if (isset($_POST['submit'])) {
 				  VALUES ('$username', '$message')";
 
 		mysqli_query($link, $query);
+	} else {
+		// DISPLAY WARNING MESSAGE
 	}
 }
-
-$query = "SELECT * FROM chat";
-$result = mysqli_query($link, $query);
 
 ?>
 
@@ -39,6 +38,9 @@ $result = mysqli_query($link, $query);
 		<div id="chat">
 			<ul>
 				<?php
+
+				$query = "SELECT * FROM chat";
+				$result = mysqli_query($link, $query);
 
 				while ($row = mysqli_fetch_assoc($result)) {
 					$date = date_create($row['datetime']);
