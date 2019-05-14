@@ -84,10 +84,11 @@ header h1 {
 	margin-right: 2%;
 }
 
-#input input[type="submit"] {
+#input button {
 	width: 100%;
 	padding: 5px;
-	margin: 10px auto 0px;
+	display: block;
+	margin: 20px auto 0px;
 }
 
 #information {
@@ -116,9 +117,5 @@ header h1 {
 	#input input[type="text"] {
 		width: 100%;
 		margin-bottom: 7px;
-	}
-
-	#input input[type="submit"] {
-		margin-top: 3px;
 	}
 }

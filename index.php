@@ -1,23 +1,3 @@
-<?php
-
-require('database.php');
-
-if (isset($_POST['submit'])) {
-	if ($_POST['user'] > "" && $_POST['message'] > "") {
-		$username = mysqli_real_escape_string($link, $_POST['user']);
-		$message = mysqli_real_escape_string($link, $_POST['message']);
-
-		$query = "INSERT INTO chat (username, message)
-				  VALUES ('$username', '$message')";
-
-		mysqli_query($link, $query);
-
-		$info_text = "Message sent.";
-	}
-}
-
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -37,42 +17,68 @@ if (isset($_POST['submit'])) {
 
 		<div id="chat">
 			<ul>
-				<?php
-
-				$query = "SELECT * FROM chat";
-				$result = mysqli_query($link, $query);
-
-				while ($row = mysqli_fetch_assoc($result)) {
-					$date = date_create($row['datetime']);
-
-					echo "
-					<li class=\"message\">
-						<span>" . date_format($date, "d/m/y h:i A") . " - </span>
-						" . $row['username'] . ":
-						" . $row['message'] . "
-					</li>
-					";
-				}
-
-				?>
 			</ul>
 		</div> <!-- /#messages -->
 
 		<div id="input" class="group">
 			<form method="post" action="index.php">
-				<input type="text" name="user" placeholder="Enter Your Name" required>
-				<input type="text" name="message" placeholder="Enter Your Message" required>
+				<input type="text" id="userInput" placeholder="Enter Your Name" required>
+				<input type="text" id="messageInput" placeholder="Enter Your Message" required>
 				<br>
-				<input type="submit" name="submit" value="Submit">
+				<button type="button" onclick="insertData()">Submit</button>
 			</form>
 		</div> <!-- /#input -->
 
 		<div id="information" class="group">
 			<div>
-				<span class="info-text"><?php echo (isset($info_text)) ? $info_text : ""; ?></span>
+				<span class="info-text"></span>
 			</div>
 		</div> <!-- /#information -->
 	</div> <!-- /.container -->
+
+	<script>
+		var readData = () => {
+			var xhr = new XMLHttpRequest();
+			xhr.onreadystatechange = () => {
+				if (xhr.readyState === 4 && xhr.status === 200) {
+					let chat = document.querySelector('#chat');
+					chat.firstElementChild.innerHTML = xhr.responseText;
+					chat.scrollTop = chat.scrollHeight;
+				}
+			};
+
+			xhr.open('GET', 'read.php', true);
+			xhr.send();
+		};
+
+		var insertData = () => {
+			var xhr = new XMLHttpRequest();
+			xhr.onreadystatechange = () => {
+				if (xhr.readyState === 4 && xhr.status === 200) {
+					if (xhr.responseText === "success") {
+						document.querySelector('.info-text').innerHTML = "Message sent.";
+						setTimeout(() => {
+							document.querySelector('.info-text').innerHTML = "";
+						}, 3000);
+
+						document.querySelector('#userInput').value = "";
+						document.querySelector('#messageInput').value = "";
+
+						readData();
+					};
+				}
+			};
+
+			var user = document.querySelector('#userInput').value;
+			var message = document.querySelector('#messageInput').value;
+
+			xhr.open('POST', 'insert.php', true);
+			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+			xhr.send(`user=${user}&message=${message}`);
+		};
+
+		window.onload = readData();
+	</script>
 </body>
 
 </html>
