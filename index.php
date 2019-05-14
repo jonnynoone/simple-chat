@@ -11,8 +11,8 @@ if (isset($_POST['submit'])) {
 				  VALUES ('$username', '$message')";
 
 		mysqli_query($link, $query);
-	} else {
-		// DISPLAY WARNING MESSAGE
+
+		$info_text = "Message sent.";
 	}
 }
 
@@ -60,8 +60,8 @@ if (isset($_POST['submit'])) {
 
 		<div id="input" class="group">
 			<form method="post" action="index.php">
-				<input type="text" name="user" placeholder="Enter Your Name">
-				<input type="text" name="message" placeholder="Enter Your Message">
+				<input type="text" name="user" placeholder="Enter Your Name" required>
+				<input type="text" name="message" placeholder="Enter Your Message" required>
 				<br>
 				<input type="submit" name="submit" value="Submit">
 			</form>
@@ -69,7 +69,7 @@ if (isset($_POST['submit'])) {
 
 		<div id="information" class="group">
 			<div>
-				<span class="info-text">Information message goes here.</span>
+				<span class="info-text"><?php echo (isset($info_text)) ? $info_text : ""; ?></span>
 			</div>
 		</div> <!-- /#information -->
 	</div> <!-- /.container -->
