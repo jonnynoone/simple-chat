@@ -1,3 +1,3 @@
 # Simple Chat
 
-A simple chat application written in PHP
+A simple asynchronous chat application written in JavaScript and PHP
